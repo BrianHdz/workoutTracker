@@ -1,39 +1,61 @@
-// This whole page needs to be reworked. 
-// It's just made as an outline from another project.
-// Need to set up html routes then api routes.
+// Reworking this page. 
+// It's just made from an outline from another project.
+// Need to set up then api routes.
 
+// Requiring our Workout model
+const Workout = require("../models/workout.js");
 const router = require("express").Router();
-const Transaction = require("../models/transaction.js");
+// Routes
+// =============================================================
 
-router.post("/api/transaction", ({ body }, res) => {
-  Transaction.create(body)
-    .then(dbTransaction => {
-      res.json(dbTransaction);
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+// Read route for getting all of the Workouts to display on page.
+router.get("/api/workouts/", (req, res) => {
+    Workout.find({})
+        .then(workoutDb => {
+            res.json(workoutDb)
+        }).catch(err => {
+            res.json(err)
+        })
 });
 
-router.post("/api/transaction/bulk", ({ body }, res) => {
-  Transaction.insertMany(body)
-    .then(dbTransaction => {
-      res.json(dbTransaction);
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+// Create 
+router.post("/api/workouts", (req, res) => {
+    Workout.create(req.body)
+        .then(workoutDb => {
+            res.json(workoutDb);
+        })
 });
 
-router.get("/api/transaction", (req, res) => {
-  Transaction.find({})
-    .sort({ date: -1 })
-    .then(dbTransaction => {
-      res.json(dbTransaction);
+// Update
+router.put("/api/workouts/:id", ({ body, params }, res) => {
+    Workout.findByIdAndUpdate(
+        params.id,
+        {
+            $push: {
+                excercises: body
+            }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    ).then(workoutDb => {
+        res.json(workoutDb);
     })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+        .catch(err => {
+            res.json(err);
+        });
 });
 
-module.exports = router;
+// DELETE route for deleting posts
+// router.delete("/api/posts/:id", ({ body, params ), res => {
+//     Workout.findByIdAndDestroy(
+//         params.id, {
+            // not sure about this line below
+//             id: req.params.id
+//         }
+//     ).then(workoutDb => {
+//             res.json(workoutDb);
+//         });
+// });
+
