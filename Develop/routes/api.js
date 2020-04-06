@@ -3,8 +3,9 @@
 // Need to set up then api routes.
 
 // Requiring our Workout model
-const Workout = require("../models/workout.js");
 const router = require("express").Router();
+const Workout = require("../models/workout.js");
+
 // Routes
 // =============================================================
 
@@ -46,6 +47,8 @@ router.put("/api/workouts/:id", ({ body, params }, res) => {
             res.json(err);
         });
 });
+
+module.exports = router;
 
 // DELETE route for deleting posts
 // router.delete("/api/posts/:id", ({ body, params ), res => {
